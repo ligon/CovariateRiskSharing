@@ -1,0 +1,10 @@
+.venv
+tmp
+tmp_*.csv
+__pycache__
+.pytest_cache
+build/results
+var/downloads
+# .dockerignore
+.venv
+.git

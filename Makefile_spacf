@@ -1,0 +1,71 @@
+##
+# Make spatial autocorrelation figures
+#
+# -----------------------------------------------------------------------------
+# Configuration
+# -----------------------------------------------------------------------------
+PYTHON   := python3
+SRC_DIR  := ./src/shock_maps/
+DATA_DIR := ./var/
+FIG_DIR  := ./Figures/LSMS-ISA/
+INPUT_DATA := ./external_data/lsms_ag.parquet
+
+CORES ?= $(if $(SLURM_CPUS_PER_TASK),$(SLURM_CPUS_PER_TASK),1)
+DRAWS ?= 3
+
+# List your shocks here. Adding a new shock (e.g. shock_D) is as easy as adding it to this list.
+SHOCKS   := drought flood pests
+
+# Generate the list of expected parquet files (e.g., data/shock_A.parquet)
+PARQUETS := $(patsubst %, $(DATA_DIR)/%.parquet, $(SHOCKS))
+
+# The final output file
+TARGET_FIG := $(FIG_DIR)/shock_spacf.png
+
+# -----------------------------------------------------------------------------
+# Targets
+# -----------------------------------------------------------------------------
+
+# Default target: build the figure
+.PHONY: all clean
+all: $(TARGET_FIG)
+
+# -----------------------------------------------------------------------------
+# 1. The Aggregation Step (Plotting)
+# -----------------------------------------------------------------------------
+$(TARGET_FIG): $(SRC_DIR)/shock_spacf.py $(PARQUETS)
+	@mkdir -p $(FIG_DIR)
+	@echo "[PLOT] Generating combined figure..."
+	$(PYTHON) $< --input_dir $(DATA_DIR) --output $@
+
+# -----------------------------------------------------------------------------
+# 2. The Heavy Computation Step (Pattern Rule)
+# -----------------------------------------------------------------------------
+$(DATA_DIR)/%.parquet: $(SRC_DIR)/spatial_autocorrelation.py
+	@mkdir -p $(DATA_DIR)
+	@echo "[CALC] Started shock: $* at $$(date '+%H:%M:%S')"
+	@/usr/bin/time -f "User: %U s | Sys: %S s | Real: %E" \
+	$(PYTHON) $< \
+      --shock $* \
+      --outdir $(DATA_DIR) \
+      --input_data $(INPUT_DATA) \
+      --cores $(CORES) \
+      --draws $(DRAWS)
+	@echo "[CALC] Finished shock: $* at $$(date '+%H:%M:%S')"
+
+# -----------------------------------------------------------------------------
+# Code
+# -----------------------------------------------------------------------------
+$(SRC_DIR)/shock_spacf.py: Text/risk-sharing.org
+	+$(MAKE) src/.tangled
+
+# -----------------------------------------------------------------------------
+# Utilities
+# -----------------------------------------------------------------------------
+clean:
+	@echo "Cleaning up generated files..."
+	rm -f $(DATA_DIR)/*.parquet
+	rm -f $(TARGET_FIG)
+
+
+# end

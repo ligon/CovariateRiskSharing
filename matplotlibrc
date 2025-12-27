@@ -1,0 +1,14 @@
+# matplotlibrc
+
+# Default resolution for saving figures
+savefig.dpi : 300
+
+# Automatically trim whitespace around the figure
+savefig.bbox : tight
+
+# Optional: Set a professional font family for all plots
+font.family : serif
+font.serif  : Times New Roman, DejaVu Serif
+
+# Optional: Make lines slightly thicker for better visibility in print
+lines.linewidth : 1.5

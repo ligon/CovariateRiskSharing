@@ -1,0 +1,4 @@
+[submodule "external_data/LSMS_Library"]
+	path = external_data/LSMS_Library
+	url = https://github.com/ligon/LSMS_Library.git
+	branch = use_parquet

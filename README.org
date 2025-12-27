@@ -1,0 +1,306 @@
+#+title: CovariateRiskSharing
+#+title: README for "Risk sharing tests and covariate shocks: Drought, Floods,  and Pests in Uganda" (Ethan Ligon)
+#+options: ^:nil
+#+bibliography: Text/covariate_risksharing.bib
+
+A reproducible research environment for replicating results from [cite/t:@ligon25], now (<2025-12-12 Fri>) conditionally accepted at the /American Economic Review/:
+#+begin_src
+@Unpublished{	  ligon25,
+  author	= {Ethan Ligon},
+  title		= {Risk sharing tests and covariate shocks: Drought, Floods,
+		  and Pests in {Uganda}},
+  year		= 2025,
+  url		= {https://escholarship.org/uc/item/2zr503fq}
+}
+#+end_src
+* Overview
+This replication package provides the manuscript [[file:Text/risk-sharing.org][Text/risk-sharing.org]] used to construct [[https://escholarship.org/uc/item/2zr503fq][Ligon (2025)]].  This is a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] document which provides both the text of the manuscript as well as all the code required to construct the analysis datasets from the [[https://microdata.worldbank.org/index.php/catalog/lsms/][LSMS data]] available from the World Bank [cite:@ubosvarious], and then to estimate or construct all figures and tables in the paper. 
+
+A helper is provided via the [[./Makefile]], which can be used to extract ("tangle") all code, run it, and compile the complete set of empirical results in the paper.  Given a linux environment with some [[id:488d697a-af14-410b-88d2-9f277fa5874b][minimal dependencies]] one simply (hopefully?) need only type =make=.
+
+* Two Modes
+** Online Streaming Mode
+In the default (online) mode, make streams the mirrored primitive LSMS World
+Bank data via the vendored LSMS_Library submodule, tangles the Org sources,
+rebuilds the Ugandan analysis parquet tables, and then produces the regression
+object plus all tables/figures (and the PDF if \LaTeX is present). On first run
+you’ll be prompted for the LSMS data passphrase (email [[mailto:ligon@berkeley.edu][ligon@berkeley.edu]] if you
+need one); after that the library caches the parquet outputs under
+=external_data/LSMS_Library/Uganda/var/=, so subsequent builds reuse the cached
+data while still reconstructing every analysis step.
+
+** Offline Archival Mode
+For archival or air-gapped replication, a packaged checkout includes all
+required Parquet artifacts and an ARCHIVE_MODE file at repo root. When that file
+exists, the Makefile disables network access, skips LSMS authentication, forces
+~USE_CONDA=0~ and ~USE_PARQUET=1~ and treats the bundled Parquet data as
+immutable inputs. In this mode =make= (or =make results figures=) runs entirely
+offline using the prebuilt parquet tables under
+=external_data/LSMS_Library/Uganda/var/= and =var/ lsms_isa_plots.parquet=, and
+reuses the cached headless Chromium bundle in =var/pyppeteer=. If that directory
+is absent—or if =.venv= does not already exist—seed both by running =make
+downloads= on a connected machine (this works even with =ARCHIVE_MODE= set),
+then copy the prepared tree (including =.venv= and =var/pyppeteer=) to the
+offline box.
+
+* Data Provenance
+The paper uses data from the Living Standards Measurement Surveys in two different forms.  
+** Uganda National Panel Surveys
+The main data we use are Uganda-specific data provided by the World Bank.  Data is subject to a redistribution restriction, but can be freely downloaded from https://microdata.worldbank.org/index.php/catalog/lsms/.  
+
+*** Downloading
+If you wish to download these original data (but see below), go to the linked download page,  choose "Uganda" for country, and then download the seven "National Panel Surveys".  You will need to fill out registration forms, including a brief description of the project, and agree to the conditions of use. Note: "the data files themselves are not redistributed" and other conditions. 
+
+If download the LSMS files directly from the World Bank, unzip the downloads and drop the various files into the directories =./external_data/LSMS_Library/Uganda/WAVE/Data/=, where =WAVE= is a year (e.g., "2005-06") corresponding to the survey wave.  For each file "foo" you should see an existing and corresponding file "foo.dvc".  This approach avoids the need to get a passphrase from me, but would be tedious.
+
+*** Online Streaming Mode
+*Alternatively* (and recommended), if building from scratch then all the necessary Uganda data can be streamed using the [[https://github.com/ligon/LSMS_Library][LSMS_Library]] package.  However, as I do not have permission to publicly redistribute these data you will need to affirm that the use of this library is strictly for purposes of replication, and obtain a passphrase by emailing =ligon@berkeley.edu=.  The code for replication assumes that these data are available.  
+
+*** Offline Archival Mode 
+In offline archival mode (=ARCHIVE_MODE= file present) we don't have the option of streaming the LSMS files, so we instead bundle parquet inputs under  =external_data/LSMS_Library/Uganda/var/=.  Code to generate these derived parquet files from the primitive original files can be found in [[file:external_data/LSMS_Library/Uganda/_/][external_data/LSMS_Library/Uganda/_/]] and the various wave-specific directories =external_data/LSMS_Library/Uganda/*/_=.  
+
+** LSMS-ISA Harmonized Dataset
+A second collection of data ultimately derived from the Living Standards Measurement Surveys covers eight different countries in Africa, and is provided in a dataset described by [cite/t:@bentze-wollburg24], and publicly distributed at [[https://github.com/lsms-worldbank/LSMS-ISA-harmonised-dataset-on-agricultural-productivity-and-welfare/]]  (v 2.0) under a Creative Commons license (CC0 1.0 Universal).   However, the present  paper actually relies on an earlier version of these same data no longer distributed on that website.  The earlier dataset has more information on shocks in Uganda than the dataset linked above.  A more manageable parquet file of the data we need on shocks is extracted here as [[./external_data/lsms_ag.parquet][./external_data/lsms_ag.parquet]].  
+
+* License
+This repository is a "literate programming" project where code and text are interleaved. To facilitate both academic citation and software reuse, this package is licensed under a hybrid model.  Narrative text, documentation, and data files are licensed under the Creative Commons Attribution 4.0 International Public License (CC-BY 4.0).      The code chunks, scripts, software logic, and Makefiles contained within this package are licensed under the BSD 3-Clause License.  See the [[./LICENSE.txt][./LICENSE.txt]] for details.
+
+* Replication
+** Idea of replication workflow
+  The basic theory of the repository: type =make=. Then, automagically:
+   1. All python dependencies will be installed by =poetry= (always offline if =ARCHIVE_MODE= is present).
+   2. All source code will be [[https://orgmode.org/manual/Extracting-Source-Code.html][tangled]] from the ur-source [[./Text/risk-sharing.org][risk-sharing.org]] (which is also the actual manuscript).
+   3. Passphrase prompt (Online Streaming Mode only): you may be prompted for a passphrase to stream Uganda data via [[https://github.com/ligon/LSMS_Library][LSMS_Library]]; in =ARCHIVE_MODE= this is skipped and no network is used.
+   4. Demand system estimation via [[https://github.com/ligon/CFEDemands/][CFEDemands]]:
+      - Online Streaming Mode: streams LSMS data via [[https://github.com/ligon/LSMS_Library][LSMS_Library]] to create [[./build/var/uganda_preferred.rgsn][./build/var/uganda_preferred.rgsn]].
+      - Offline Archival Mode (=ARCHIVE_MODE= file present): reuses bundled parquet inputs under  =external_data/LSMS_Library/Uganda/var/= and =var/lsms_isa_plots.parquet= (no downloads).
+   5. The source code to handle estimation and build tables and figures from [[./Text/risk-sharing.org][risk-sharing.org]] will be run.
+   6. All tables and figures will be included in a pdf built from [[./build/risk-sharing-results.org][./build/risk-sharing-results.org]].
+
+** Install Dependencies
+:PROPERTIES:
+:ID:       488d697a-af14-410b-88d2-9f277fa5874b
+:END:
+This project can bootstrap itself with only a modest set of dependencies, assuming a =linux/bash= environment with:
+- [[https://git-scm.com/][git]]
+- [[https://www.python.org/][python3]] with the =venv= module (>=3.11)
+- [[https://www.gnu.org/software/make/][GNU make]]
+- [[https://www.gnu.org/software/emacs/][GNU Emacs]] (used in batch mode to tangle =risk-sharing.org=)
+- \LaTeX (=pdflatex= and friends.  Optional; only required to actually compile the final documents to pdf)
+
+#+begin_quote
+Poetry, DVC, CFEDemands, LSMS_Library, etc. need *not* be pre-installed: the Makefile bootstraps the python environment =.venv=, installs Poetry inside it, and wires the LSMS submodule to that same environment automatically. All you need system-wide is the short list above.
+#+end_quote
+
+Exact =python= dependencies are specified in [[./pyproject.toml][./pyproject.toml]].
+
+*** Quick install recipes
+Ideas for quickly setting up the required environment
+**** Debian / Ubuntu
+  #+begin_src shell
+  sudo apt update
+  # Minimal toolchain (tables + figures only)
+  sudo apt install git make emacs-nox python3 python3-venv
+  # Add these if you want the PDF too (~600 MB instead of texlive-full)
+  sudo apt install texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+  # optional but handy
+  sudo apt install pipx
+  #+end_src
+
+**** RHEL / Fedora / CentOS Stream (not tested)
+  #+begin_src shell
+  sudo dnf install git make emacs-nox python3 python3-venv
+  # Optional LaTeX stack for the PDF (scheme-medium is enough)
+  sudo dnf install texlive-scheme-medium
+  #+end_src
+
+  On older RHEL releases without =python3-venv=, install =python3= and =python3-virtualenv=.
+
+Running =make results figures= with just those four packages installs every Python dependency into =.venv=, tangles the Org sources, rebuilds the CFEDemands regression, and writes all tables/figures under =results/= and =results/figures=. This is the quickest path if you only need the replication deliverables cited in the paper (tables + PNGs).
+
+*** Full paper build (=make=)
+Install everything from (a) /plus/ a LaTeX toolchain with =pdflatex= support (e.g., =texlive-latex-extra=). The default =make= target produces the PDF (=risk-sharing-results.pdf=) in addition to all tables/figures, so \LaTeX is required here. 
+
+** Build and workflow
+*** Clone repository
+If you wish to use the on-line replication package (rather than the archival version):
+#+begin_src shell
+git clone https://github.com/ligon/CovariateRiskSharing.git
+cd CovariateRiskSharing
+# optional: git submodule update --init --recursive  # normally handled by `make submodules`
+#+end_src
+
+
+*** Micromamba bootstrap (default)
+The Makefile defaults to installing/using [[https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html][micromamba]] to construct the build
+environment. When you run =make=, it will automatically download a tiny static
+micromamba binary into =~/.cache/micromamba= (configurable via
+=MICROMAMBA_ROOT=) and reuse it for future builds, installing environments under
+=~/.micromamba= (=MICROMAMBA_ROOT_PREFIX=). No manual =conda activate= step is
+required for bootstrapping =.venv=; the Makefile invokes micromamba directly.
+
+Set =MICROMAMBA_AUTO_INSTALL=0 to skip the download (expecting micromamba to
+already exist in =PATH=) or =USE_CONDA=1 if you explicitly want to use your site
+Conda instead. In that mode the previous behaviour (optionally auto-installing
+=mamba= inside base Conda when =MAMBA_AUTO_INSTALL=1) remains available. For
+interactive hacking you can still =micromamba activate risksharing= (or use
+=conda activate= when ~USE_CONDA=1~) to drop into the same environment that the
+build uses under the hood.
+
+On clusters where =$HOME/.cache= lives on NFS (and thus cannot host POSIX
+locks), micromamba falls back to a node-local cache directory (=/tmp/$USER/.cache=) 
+so =mamba run= can acquire its lock files without manual tweaking. If your site requires a 
+different scratch path, export =XDG_CACHE_HOME= (or =MAMBA_APPDIR=) before running 
+=make= and the build will honor it while keeping the staged environments under =~/.micromamba=.
+
+After =poetry install= finishes, the build now runs =pip install -e
+external_data/LSMS_Library= inside =.venv= and writes a small =.pth= file
+pointing back to the repository root, so both =sitecustomize.py= and the LSMS
+package are always importable (even on offline nodes where Poetry cannot refresh
+the lock file).
+
+*** Use =make= to build and run analyses
+The [[./Makefile][Makefile]] defines all dependencies, and should be the first thing you review in the event of build difficulties.  The graph of dependencies is not trivial, and I strongly recommend using =make= as your principal entry into the build process.
+
+Pick the tier that matches what you need.
+1. Tables + figures only
+   #+begin_src shell
+   make results figures
+   #+end_src
+   Produces every Org table under =results/=, every PNG under =results/figures/=, and the
+   regression object =build/var/uganda_preferred.rgsn=. Only the “small” dependency set is required.
+
+2. Full paper (tables, figures, PDF)
+   #+begin_src shell
+   make
+   #+end_src
+   Builds everything above /and/ compiles =build/risk-sharing-results.pdf= via \LaTeX.
+
+The default target first checks whether the =risksharing= Conda environment exists
+and meets the Python version constraint; if the check fails and =CONDA_AUTO_BOOTSTRAP= (default
+=1=) is enabled, the build automatically creates or updates the environment (mirroring
+=make conda-env= / =make conda-update=) so replicators on a fresh machine don't have to remember
+the bootstrap command. Disable this auto-provisioning with =CONDA_AUTO_BOOTSTRAP=0 make= if you
+prefer to manage the environment yourself.
+
+#+begin_quote
+Running on a SLURM cluster? See =misc/slurm/README.md= for ready-to-submit job templates, or run
+=make slurm-results=, =make slurm-full=, or =make slurm-spacf= to submit those scripts directly.
+#+end_quote
+
+#+begin_quote
+Want a more isolated environment? See =misc/docker/= for a ready-to-submit Dockerfile, or run =make docker-results=, or =make docker-run=, to produce results in a docker container.  By default these are written to the host in the =docker-build/= directory.
+
+Note that for reasons of efficiency we do /not/ provide the \TeX tools in the docker image that one would need to compile the final results.  For this you should rely on a \TeX distribution in the host environment, or modify the Dockerfile.
+#+end_quote
+
+*** Two-stage offline workflow
+Need to stage downloads on a slower, internet-facing box and crunch on a faster offline machine?  First run:
+#+begin_src shell
+make downloads
+#+end_src
+This installs the Poetry environment into =.venv=, updates the =external_data/LSMS_Library= submodule, grabs the harmonized LSMS-ISA release, downloads the headless Chromium binary required by =pyppeteer= into =var/pyppeteer= (the Makefile exports =PYPPETEER_HOME= to point there), and materializes the Uganda parquet caches (e.g., =external_data/LSMS_Library/lsms_library/countries/Uganda/var/food_expenditures.parquet=) via DVC so all network traffic finishes up front.  Copy or mount the synced checkout on the fast computer (which now reuses the prepared =.venv=, LSMS caches, =var/pyppeteer= browser bundle, and downloaded data) and run =make= there to perform the heavy computation without needing internet access.
+
+The first time you do this, if you are in online streaming mode (the defaults) you may be prompted for a passphrase, necessary for gaining access to the LSMS data files (these are the primitive files obtained from the World Bank; I don't have permission to distribute them publicly).  If you don't know the passphrase email =ligon@berkeley.edu= to request one.
+
+** Randomness & Monte Carlo
+Monte Carlo steps (e.g., demand bootstraps, permutation tests) run with a deterministic seed (=RISKSHARING_SEED=, defined in the Makefile and currently =20250118=) so the full build is reproducible out of the box.  Edit that constant (or temporarily clear it with ~make RISKSHARING_SEED=~  if you need fresh randomness.
+
+There are three things that involve bootstrapping/Monte Carlo in the paper.  
+
+1. The distribution of estimated \(\beta\) parameters is bootstrapped.  This is handled by the =CFEDemands= package, and affects reported confidence intervals reported in the paper.  This is not very computationally demanding.  
+2. The =between_variance= table in the appendix.  This is more expensive---if you have multiple cores on your  machine the code will try to use them.  You can control the number of cores used with the environment variable =BETWEEN_VARIANCE_WORKERS= (e.g., ~make BETWEEN_VARIANCE_WORKERS=2 results/between_variance.org~)  
+3. The acceptance regions for the =shock_spacf= figure in the appendix.  The algorithm for this is quite brute force, and rather expensive.  The number of bootstrap draws can be specified using the =DRAWS= environmental variable.  The default is  just ~DRAWS=3~ to prevent the unwary replicator from thrashing their machine, but the figure in the paper used ~DRAWS=1000~.
+
+** Computational requirements and benchmarking
+
+The build system is tooled to permit one to complete all calculations using three different models.  The first model is simply to use =poetry= and run using "make". All results can be computed with only modest computing resources (e.g., a chromebook is able to produce all the results of this paper).
+
+The second model uses =docker=.  Type =make docker-run=.   This permits greater isolation.
+
+The third model involves using a HPC cluster; this is useful if one is in a hurry, particularly for the bootstrapping/monte carlo exercises (see =$(HEAVY_RESULTS)= in the Makefile).  The approach here involve SLURM scripts which will need to be adapted to local circumstances; see the scripts in [[./misc/slurm]].  After adjusting these appropriately, from a node in the cluster type =make slurm-full=.
+
+The build system automatically tracks computational time for major tasks. When you run =make=, timing information is recorded to =benchmarks.txt= and system information is saved to =system_info.txt=.
+*** Required storage space
+Because the data is streamed, total storage requirements for the replication are very modest, at less than 100 MB.  If one then adds the python environment, actual computed results and some intermediary files then grand total remains less than 3 GB.
+
+*** Benchmarked operations
+- =poetry install= :: Installing Python dependencies
+- =org-babel-tangle= :: Extracting source code from risk-sharing.org
+- =uganda_preferred= :: Estimating the CFE demand system (typically the most time-consuming step)
+- =generate results= :: Building all result tables
+- =generate figures= :: Creating all figures
+- =compile PDF= :: LaTeX compilation (if building the full PDF)
+
+*** Disabling benchmarks
+To disable benchmarking (enabled only in online streaming mode):
+#+begin_src shell
+make BENCHMARK=0
+#+end_src
+
+*** Benchmark results
+
+Raw timings accumulate in ~benchmarks-raw.txt~, while the latest summarized table (grouped by target) lives in ~benchmarks.txt~ and is embedded below.
+
+#+INCLUDE: "build/benchmarks.org"
+
+Runtime depends on CPU speed, available memory (recommend ≥8GB), network speed (for initial downloads), and whether the data passphrase is cached.
+
+** Practical Notes on Computation
+
+- If =poetry= is not installed in your environment, you'll need some method (e.g., [[https://pipx.pypa.io/stable/installation/][pipx]]) to add it.
+- Non-python dependencies (=Emacs=, =make=, =pipx=, some \LaTeX distribution) must be installed via your platform's package manager (e.g., apt, brew, pacman).
+- This repository vendors [[https://github.com/ligon/LSMS_Library][LSMS_Library]] as a git submodule under
+  =external_data/LSMS_Library=.  The build runs =make submodules= (which shells out
+  to =git submodule update --init --recursive external_data/LSMS_Library=) before
+  =poetry install=, so manual submodule setup is usually unnecessary unless you want
+  to control it explicitly.  Set =PRIVATE_LSMS_ISA_FIGURES= if you maintain alternate paths.
+- Want fresh LSMS-ISA figures?  After downloading the plot-level data run
+  =make results/figures/LSMS-ISA/drought_incidence.png= (and the analogous =flood= and
+  =pests= targets) to build the PNGs directly from the harmonized dataset.
+- The spatial autocorrelation figure (=shock_spacfs.png=) is costly to compute, because of the bootstrapped acceptance regions.  We provide it with a dedicated flow.  Invoke =make results/figures/LSMS-ISA/shock_spacfs.png= (which shells out to
+  =Makefile_spacf=) or run =make -f Makefile_spacf DRAWS=1000 CORES=32= directly when you
+  need to tune the Monte Carlo draws/cores.  On Savio or other clusters submit =misc/slurm/lsms-spacf.slurm= via sbatch (making whatever local adjustments are necessary).
+- The between-variance Monte Carlo parallelizes across CPU cores.  Set
+  =BETWEEN_VARIANCE_WORKERS=<n>= to control worker count (defaults to ~√CPUs, capped
+  to avoid monopolizing shared boxes).  Each wave’s permutations use deterministic
+  seeds tied to the wave label, so output stays reproducible unless you override
+  the env var for more/less parallelism.
+- If the working tree lives on NFS, DVC’s default reflink cache mode
+  isn’t supported; run =dvc config cache.type copy= once inside this repo so DVC
+  falls back to copying cached outputs during =make downloads= or Uganda materialization
+  stages.
+- The spatial autocorrelation permutations are expensive, so the main build
+  never runs them automatically. Use the commands above (locally or via Slurm)
+  and adjust =DRAWS=/=CORES= to balance precision against runtime.
+- The LSMS-ISA renderer now screenshots Folium maps using a headless Chromium via
+  =pyppeteer=.  The command =make downloads= now runs =pyppeteer-install= and caches the browser
+  (~100MB) inside =var/pyppeteer= (where =PYPPETEER_HOME= points by default), so
+  subsequent builds---including offline ones---reuse the cached binary with no lazy downloads.
+- See =Makefile= for specific build tasks.
+- You can use the =CFEDemands= package to examine or play with the estimated demand system [[./build/var/uganda_preferred.rgsn]].
+- If you need the passphrase for LSMS data access, email =ligon@berkeley.edu= to request one.
+- Complaints, questions, bugs?  Open an [[https://github.com/ligon/CovariateRiskSharing/issues][issue]].
+
+* Directory structure
+
+- Text/risk-sharing.org :: The ur-file.  This is the paper, with all code.  This is a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] project.
+- Makefile :: Build instructions
+- pyproject.toml :: Python dependency specification
+- src/  :: Python source code (initially empty)
+- build/ :: Where things are built
+  - build/risk-sharing-results.org :: Scaffolding file: compiles to a pdf with all results & figures.
+  - build/results/ :: Where tables are constructed
+    - build/results/figures/ :: Where figures are kept
+  - build/var :: Where intermediate files live
+- log/ :: Logs from build processes
+
+* Other key packages
+Aside from standard python tooling such as =numpy=, =pandas= and similar there are two critical research related packages.  One, already mentioned, provides the Ugandan data for the main analysis [cite:@ligon25:lsms_library]; here we use the =use_parquet= branch of the software available at https://github.com/ligon/LSMS_Library/tree/use_parquet.  The second is the code to estimate the Constant Frisch Elasticity (CFE) demand system  [cite:@ligon25:cfe_code], available at https://github.com/ligon/CFEDemands.
+
+* References
+#+print_bibliography: 
+* Local Variables                                :noexport:
+# Local Variables:
+# org-cite-global-bibliography: nil
+# End:

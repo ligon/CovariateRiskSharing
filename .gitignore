@@ -1,0 +1,104 @@
+# Replication Package .gitignore
+# Distinguishes source files from generated artifacts
+
+# ============================================================
+# Generated source code (tangled from risk-sharing.org)
+# ============================================================
+src/*
+!src/.gitkeep
+
+# ============================================================
+# Copied/generated text files
+# ============================================================
+Text/*
+!Text/.gitkeep
+!Text/shock_maps.org
+!Text/shock_spacfs.org
+!Text/risk-sharing.org
+
+# ============================================================
+# Build artifacts
+# ============================================================
+build/results/*
+!build/results/.gitkeep
+!build/results/figures/
+build/results/figures/*
+!build/results/figures/.gitkeep
+
+build/var/*
+!build/var/.gitkeep
+
+# Keep the scaffolding file that assembles final PDF
+!build/risk-sharing-results.org
+!build/org-export-helpers.el
+
+# LaTeX build artifacts
+build/*.tex
+build/*.aux
+build/*.log
+build/*.out
+build/*.blg
+build/*.bbl
+build/*.fls
+build/*.fdb_latexmk
+build/*.synctex.gz
+build/*.toc
+
+# Final PDF output in build directory
+build/*.pdf
+
+# Top-level PDF output (copy of build/risk-sharing-results.pdf)
+risk-sharing-results.pdf
+
+# ============================================================
+# Python environment
+# ============================================================
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Poetry
+pyenv
+.poetry/
+
+# ============================================================
+# Data files
+# ============================================================
+var/
+downloads/
+*.dta
+*.rgsn
+*.parquet
+*.feather
+
+# ============================================================
+# Logs
+# ============================================================
+log/*
+!log/.gitkeep
+
+# ============================================================
+# Session and temporary files
+# ============================================================
+.coder-session/
+*~
+\#*\#
+.DS_Store
+*.swp
+*.swo
+
+# ============================================================
+# Benchmark results (optional: commit these for documentation)
+# ============================================================
+# benchmarks.txt
+# system_info.txt
+/build/.latex/
+
+# ============================================================
+# Miscellaneous artifacts
+# ============================================================
+=0.8.0
+benchmarks-raw.txt

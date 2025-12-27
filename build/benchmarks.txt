@@ -1,0 +1,9 @@
+## Benchmark summary generated 2025-12-11 18:00:00
+Raw log: benchmarks-raw.txt
+
+Target                         Count   Median      Max      Total
+----------------------------------------------------------------------
+compile PDF                        1       29s       29s         29s
+generate figures                   1       25s       25s         25s
+generate results                   1     1377s     1377s       1377s
+uganda_preferred (demand estimation)     1      214s      214s        214s

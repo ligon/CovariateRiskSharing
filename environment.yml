@@ -1,0 +1,7 @@
+name: risksharing
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - poetry
+  - pip

@@ -1,0 +1,229 @@
+#+title:Risk Sharing Tests and Covariate Shocks: Tables & Figures
+#+author: Ethan Ligon
+#+LATEX_HEADER_EXTRA: \usepackage{tabularx}\usepackage[online]{threeparttable}\usepackage{booktabs}
+#+LATEX_HEADER_EXTRA: \usepackage{dcolumn}
+#+LATEX_HEADER_EXTRA: \usepackage{float}
+#+LATEX_HEADER_EXTRA: \usepackage{fullpage}
+#+LATEX_HEADER_EXTRA: \newcommand{\ts}[1]{\textsuperscript{#1}}\newcommand{\hd}[1]{\multicolumn{1}{c}{\text{#1}}}
+#+LATEX_HEADER_EXTRA: \usepackage{longtable}\setlength\LTcapwidth{\textwidth}
+#+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
+#+LATEX_HEADER_EXTRA: \hypersetup{hypertexnames=false}
+
+* Introduction
+
+This document provides a scaffolding to report replications of the Tables & Figures found in /Risk Sharing Tests and Covariate Shocks/.  Numbering of sections, tables, and figures are set to match the corresponding elements in the paper.
+
+#+latex: \setcounter{section}{3}
+* Data from Uganda
+#+name: tab:attrition
+#+caption: Households' Attrition in the Ugandan LSMS.  Includes only households with data necessary to estimate demand system.
+#+include: results/attrition.org
+
+#+name: tab:household_characteristics
+#+caption: Mean characteristics of households in Uganda by year.  Figures in parentheses are standard deviations.  Households missing data on any of these characteristics or with inadequate data on food expenditures are excluded from the analysis.
+#+attr_latex: :booktabs t
+#+include: results/household_characteristics.org
+
+#+latex: \vfill\eject
+* Estimates of the CFE Expenditure System
+#+name: fig:beta_estimates
+#+caption: Estimates of Frishian elasticities $\beta_j$.  These are proportional to income elasticities.  Horizontal bars are 95% confidence intervals.
+#+attr_latex: :placement [H]
+[[./results/figures/beta_estimates.png]]
+
+
+#+name: fig:w_by_year_joyplot
+#+caption: Distribution of $w$ by year.
+#+attr_latex: :placement [H]
+[[./results/figures/w_by_year_joyplot.png]]
+
+#+latex: \vfill\eject
+* Tests of Risk Sharing in the Face of Covariate Shocks
+#+attr_latex: :placement [H]
+#+begin_table
+#+begin_threeparttable
+#+latex: \caption{Effects of different shocks on welfare measures $w$ and $\log x$.\tnote{$N$,$T$,$H$,$X$,$FE$}}
+#+latex: \label{tab:effects_of_different_shocks_last_year}
+#+attr_latex: :center nil  :font \small  :booktabs t
+#+include: results/effects_of_different_shocks_last_year.org
+#+begin_tablenotes
+\item[*]{\(p\)<0.10;} \item[**]{\(p\)<0.05.} \item[***]{\(p\)<0.01.}
+\item[$N$]{Total observations are 22791 unless otherwise noted.}
+\item[$T$]{All regressions involve 8 rounds and 4 markets.}
+\item[$H$]{A total of 5604 distinct households, unless otherwise noted (but not all households appear in all rounds).}
+\item[$X$]{All regressions include the number of boys, girls, men, women, log of household size, and a "rural" dummy as additional covariates.}
+\item[FE]{Household Fixed Effects: Yes; Market-year Effects: Yes}
+\item[I]{The regression on income has $N=9721$, and $H=3851$.}
+#+end_tablenotes
+#+end_threeparttable
+#+end_table
+
+#+name: fig:covariate_shocks_by_month
+#+caption: Effects of any covariate shock within the last $m$ months on welfare measures, from a two-way panel regression otherwise specified as in \Tab{effects_of_different_shocks_last_year}.   Scale is in standard deviations of the dependent variable ($w$ or $\log x$).  Error bars cover a span of two standard errors about the point estimate.
+#+attr_latex: :placement [htb]
+[[./results/figures/covariate_shocks_by_month.png]]
+
+#+attr_latex: :placement [htb]
+#+begin_table
+#+begin_threeparttable
+#+latex: \caption{Effects of different shocks within the last $m$ months on current log consumption expenditures.\tnote{$N$,$T$,$H$,$X$,FE}}
+ #+latex: \label{tab:shocks_on_logx}
+#+attr_latex: :center nil :font \scriptsize  :booktabs t
+#+include: results/by_month.org :lines "-29"
+#+begin_tablenotes
+\item[*]{\(p\)<0.10;} \item[**]{\(p\)<0.05.} \item[***]{\(p\)<0.01.}
+\item[$N$]{Total observations are 22791.}
+\item[$T$]{All regressions involve 8 rounds and 4 markets.}
+\item[$H$]{A total of 5604 distinct households (but not all households appear in all rounds).}
+\item[$X$]{All regressions include the number of boys, girls, men, women, log of household size, and a "rural" dummy as additional covariates.}
+\item[FE]{Household Fixed Effects: Yes; Market-year Effects: Yes}
+#+end_tablenotes
+#+end_threeparttable
+#+end_table
+
+
+#+attr_latex: :placement [H]
+#+begin_table
+#+begin_threeparttable
+#+latex: \caption{Effects of different shocks within the last $m$ months on current $w=-\log\lambda$.\tnote{$N$,$T$,$H$,$X$,FE}}
+#+latex: \label{tab:shocks_on_w}
+#+attr_latex: :center nil :font \scriptsize :booktabs t
+#+include: results/by_month.org :lines "30-"
+#+begin_tablenotes
+\item[*]{\(p\)<0.10;} \item[**]{\(p\)<0.05.} \item[***]{\(p\)<0.01.}
+\item[$N$]{Total observations are 22791.}
+\item[$T$]{All regressions involve 8 rounds and 4 markets.}
+\item[$H$]{A total of 5604 distinct households (but not all households appear in all rounds).}
+\item[$X$]{All regressions include the number of boys, girls, men, women, log of household size, and a "rural" dummy as additional covariates.}
+\item[FE]{Household Fixed Effects: Yes; Market-year Effects: Yes}
+#+end_tablenotes
+#+end_threeparttable
+#+end_table
+
+#+name: fig:covariate_shocks_by_month_one_way
+#+caption: Effects of any covariate shock within the last $m$ months on welfare measures with household fixed effects, but otherwise specified as in \Tab{effects_of_different_shocks_last_year}.   Scale is in standard deviations of the dependent variable ($w$ or $\log x$).  Error bars cover a span of two standard errors about the point estimate.
+#+attr_latex: :placement [htb]
+[[./results/figures/covariate_shocks_by_month_one_way.png]]
+
+
+#+LATEX: \vfill\eject
+#+LATEX: \appendix
+#+LATEX: \renewcommand\thetable{\thesection.\arabic{table}}
+#+LATEX: \renewcommand\thefigure{\thesection.\arabic{figure}}
+#+LATEX: \setcounter{table}{0}    % Reset table numbers for appendix
+#+LATEX: \setcounter{figure}{0}    % Reset table numbers for appendix
+#+LATEX: \setcounter{section}{2} % Start with figures in Appendix C
+
+* For Online Publication: Direct Evidence on the Effects of Covariate Shocks :online:
+
+#+name: fig:agg_shares_and_mean_shares
+#+caption: Log of aggregate shares minus log of mean shares for different years (ordered by aggregate share averaged across years), with 95% confidence intervals.
+#+attr_latex: :height .9\textheight :placement [htb]
+[[./results/figures/agg_shares_and_mean_shares.png]]
+
+#+name: tab:shocks_by_year
+#+caption: Reported incidence of different kinds of shocks by year.
+#+attr_latex: :booktabs t
+#+include: results/shocks_by_year.org
+
+#+attr_latex: :placement [htb]
+#+begin_table
+#+begin_threeparttable
+#+latex: \caption{Proportion of total variance in shock reports attributable to variation between clusters, by year.  Figures in parentheses are \(p\)-values\tnote{$\dagger$} associated with the null hypothesis that the ``between'' variancc is no greater than the pooled variance.}
+#+latex: \label{tab:between_variance}
+#+attr_latex: :font \small :center nil  :booktabs t
+#+include: results/between_variance.org
+#+begin_tablenotes
+\item[$\dagger$]{All \(p\)-values computed using randomized permutation tests, with 1000 draws.}
+ \item[*]{\(p<0.10\).}
+ \item[**]{\(p<0.05\).}
+ \item[***]{\(p<0.01\).}
+\item[$N$]{Total observations are 28,588.}
+\item[$T$]{All regressions involve 8 rounds, 4 markets, and an average of 550 clusters per round.}
+\item[$H$]{A total of 5771 distinct households (an average of 3045 households per round).}
+#+end_tablenotes
+#+end_threeparttable
+#+end_table
+
+**  Maps of Shocks in Africa
+#+name: fig:drought_reports
+#+caption: Drought reports in the LSMS-ISA data across Africa.  Each dot corresponds to a sample cluster; the "bluer" the dot the higher the proportion of households in the cluster which reported drought.  Note that observations from later sample years often partly obscure data from earlier years.
+#+attr_latex: :placement [htb]
+[[./results/figures/LSMS-ISA/drought_incidence.png]]
+
+#+name: fig:flood_reports
+#+caption: Flood reports in the LSMS-ISA data across Africa.  Each dot corresponds to a sample cluster; the "bluer" the dot the higher the proportion of households in the cluster which reported floods.  Note that observations from later sample years often partly obscure data from earlier years.
+#+attr_latex: :placement [htb]
+[[./results/figures/LSMS-ISA/flood_incidence.png]]
+
+#+name: fig:pests_reports
+#+caption: Pest reports in the LSMS-ISA data across Africa.  Each dot corresponds to a sample cluster; the "bluer" the dot the higher the proportion of households in the cluster which reported pests.  Note that observations from later sample years often partly obscure data from earlier years.
+#+attr_latex: :placement [htb]
+[[./results/figures/LSMS-ISA/pests_incidence.png]]
+
+#+name: fig:shock_spacfs
+#+caption: Estimated spatial autocorrelation functions for shock reports.  Dotted area indicates a point-wise 95% "acceptance" region of the null hypothesis of no correlation at a given distance.
+#+attr_latex: :placement [htb]
+[[./results/figures/LSMS-ISA/shock_spacfs.png]]
+
+#+name: tab:shock_affected
+#+caption: Subjective reports as to whether shock resulted in a decline in particular outcomes.  These reports are conditional on the respondent reporting that they'd experienced the shock in the last 12 months.
+#+attr_latex: :booktabs t
+#+include: ./results/shock_affected.org
+
+#+name: fig:shocks_and_farmgate_prices
+#+caption: Shocks and Farmgate Prices. Point estimates from a regression of changes in mean year-market (farmgate) log prices on the proportion of households reporting particular covariate shocks in a given year-market; includes year effects.  Bars indicate 95% confidence intervals.  Ordered by average magnitude of coefficient across shocks.
+#+attr_latex: :placement [htb]
+[[./results/figures/shocks_and_farmgate_prices.png]]
+
+#+name: tab:how_coped_covariate
+#+caption: How did households cope with different covariate shocks?  These reports are conditional on the respondent reporting that they'd experienced the shock in the last 12 months.  Respondents could report up to three different coping mechanisms, so columns do not sum to one.
+#+attr_latex: :booktabs t :align p{2in}rrrrr
+#+include: results/how_coped.org :lines "-20"
+
+#+name: tab:how_coped_idiosyncratic
+#+caption: How did households cope with different idiosyncratic shocks?  These reports are conditional on the respondent reporting that they'd experienced the shock in the last 12 months.  Respondents could report up to three different coping mechanisms, so columns do not sum to one.
+#+attr_latex: :booktabs t :align p{2in}rrrrr
+#+include: results/how_coped.org :lines "20-"
+
+#+name: fig:shocks_and_relative_prices
+#+caption: Histograms of \(t\)-statistics testing hypothesis that covariate shocks have no effect on prices, by good.  Shaded areas are 95% acceptance regions.
+#+attr_latex: :placement [htb]
+[[./results/figures/shocks_and_relative_prices.png]]
+
+#+name: fig:shocks_and_level_food_quantities
+#+caption: Food Quantities and Shocks.  Estimated coefficients from regression of standardized quantities of different food items on the share of households in a given market-year reporting given covariate shock (year effects included).  Bars indicate 95% confidence intervals.  Goods are ordered according to magnitude of coefficients averaged across different shock regressions.
+#+attr_latex: :placement [htb]
+[[./results/figures/shocks_and_level_food_quantities.png]]
+
+#+name: fig:shocks_and_positive_food_quantities
+#+caption: Positive Quantities and Shocks.  Estimated coefficients from regression of an indicator of positive quantities of different food items on the share of households in a given market-year reporting given covariate shock (year effects included).  Bars indicate 95% confidence intervals. Goods are ordered according to magnitude of coefficients averaged across different shock regressions.
+#+attr_latex: :placement [htb]
+[[./results/figures/shocks_and_positive_food_quantities.png]]
+
+#+name: fig:shocks_and_log_food_quantities
+#+caption: Log Quantities and Shocks.  Estimated coefficients from regression of log quantities of different food items on the share of households in a given market-year reporting given covariate shock (year effects included; zeros dropped).  Bars indicate 95% confidence intervals.  Goods are ordered according to magnitude of coefficients averaged across different shock regressions.
+#+attr_latex: :placement [htb]
+[[./results/figures/shocks_and_log_food_quantities.png]]
+
+#+latex: \vfill\eject
+* For Online Publication: Data on Shocks :online:
+#+LATEX: \setcounter{table}{6}    % Reset table numbers for appendix
+
+#+name: tab:shocks_by_round
+#+caption: Incidence of shocks by round
+#+attr_latex: :font \scriptsize :placement [htb] :align p{1.5in}rrrrrrrr
+#+include: results/shocks_by_round.org
+
+
+
+
+
+
+
+* Local variables :noexport:
+# local variables:
+# org-export-with-archived-trees: t
+# org-export-with-broken-links: mark
+# org-export-babel-evaluate: t
+# end:

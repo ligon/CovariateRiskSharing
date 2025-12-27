@@ -1,0 +1,34 @@
+#+title: Manifest
+#+author: Ethan Ligon
+
+This file describes the files that exist in different branches of the =git= repo named =CovariateRiskSharing=.  
+
+* =master=
+This branch has the core files.
+- [[./Text/risk-sharing.org]] :: The ur-org file provides the entire Ms and code in a literate file that tangles all the code to generate tables and figures, then compiles to a complete \(\LaTeX\) representation of the paper incorporating those tables and figures.
+- [[./Text/covariate_risksharing.bib]] :: Provides the bibliographic information for all material cited in [[./Text/risk-sharing.org]].
+- [[./pyproject.toml]] :: A list of =python= packages sufficient for a complete working =python= environment.
+- [[./.gitmodules]] :: Pointer to the data abstraction library from which one can borrow (most of) the Ugandan data for the project.
+- [[./Makefile]] :: Dependency map and instructions for mapping the other inputs into a variety of outputs.
+- [[./README.org]] :: ur-org file to generate documentation of this project.
+- [[./LICENSE.txt]] :: License governing use of this work.
+- [[./MANIFEST.org]] :: This file.
+* =results=
+This branch is for building the paper.  It has all the files of =master=, plus outputs built using the [[./Makefile]]:
+- Figures :: =png= files in [[./build/results/figures/]]
+- Tables :: =orgmode= snippets in [[./build/results/]]
+
+These derived files are added to the repo; figures as LFS objects.  
+* =aer_editorial=
+This branch is an /orphan/ of =results=, and used to produce the \(\LaTeX\)  manuscript for the /American Economic Review/.  It includes:
+- [[./Text/covariate_risksharing.tex]] :: \(\LaTeX\)file incorporating all tables.
+- [[./Text/AEA.cls]] :: The \(\LaTeX\) class file required by the American Economic Association.
+- [[./Text/aea.bst]] :: The \BibTeX style file required by the American Economic Association.
+- [[./Text/covariate_risksharing.bib]] :: Provides the bibliographic information for all material cited in [[./Text/covariate_risksharing.tex]].
+- Figures :: These are from =results=.
+- [[./MANIFEST.org]] :: This file.
+* =archival=
+
+
+
+

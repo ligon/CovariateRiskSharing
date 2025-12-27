@@ -1,0 +1,64 @@
+[project]
+    requires-python = ">=3.11,<4.0"
+    name = "RiskSharing_Replication"
+    version = "0.1.1"
+    description = "Reproducible build environment for RiskSharing_Replication"
+    authors = [{ name = "Ethan Ligon", email = "ligon@berkeley.edu" }]
+    dependencies = [
+                 "numpy >=1.25, <2.0",
+                 "pandas >=2.2, <3.0",
+                 "CFEDemands >= 0.8.0",
+                 "xarray >= 2023.6.0",
+                 "scikit-learn >= 1.6",
+                 # Use local testing branch of LSMS_Library via bundled submodule
+                 # (editable install so DVC metadata remains available)
+                 # Placeholder; see tool.poetry.dependencies below for develop install.
+                 # Data comes from this library
+                 #"lsms_library @ git+https://github.com/ligon/LSMS_Library.git@development",
+
+                 # Estimation of CFE demand system from this package
+                 #"CFEDemands @ git+https://github.com/ligon/CFEDemands.git",
+                 "pyyaml (>=6.0.2,<7.0.0)",
+                 "lsms (>=0.4.7,<0.5.0)",
+                 "dvc[s3] (>=3.61.0,<4.0.0)",
+                 "pyarrow (>=21.0.0,<22.0.0)",
+                 "pyreadstat (>=1.3.0,<2.0.0)",
+                 "ligonlibrary (>=0.1.5,<0.2.0)",
+                 "openai (>=1.99.5,<2.0.0)",
+                 "joypy (>=0.2.6,<0.3.0)",
+                 "statsmodels (>=0.14.5,<0.15.0)",
+                 "metrics-miscellany (>=0.2.4,<0.3.0)",
+                 "tqdm (>=4.66,<5.0)",
+                 "folium (>=0.17,<0.18)",
+                 "pyppeteer (>=1.0,<2.0)",
+                 "branca (>=0.8.2,<0.9.0)",
+                 "python-gnupg (>=0.5.2,<1.0.0)",
+                 "fooddatacentral (>=1.0.8,<2.0)",
+                 "linearmodels (>=7.0,<8.0)",
+                 ]
+
+
+[tool.poetry]
+    package-mode = false
+
+[tool.poetry.group.test.dependencies]
+    pytest = "^6.0.0"
+    ipython = "^9.4.0"
+    matplotlib = "^3.10.0"
+
+[tool.risksharing_replication]
+# You could add custom configuration here
+
+[tool.poetry.dependencies]
+lsms_library = {path = "external_data/LSMS_Library", develop = true}
+
+[build-system]
+    requires = ["setuptools>=61.0"]
+    build-backend = "setuptools.build_meta"
+
+# Non-python dependencies
+# -------------------------------------------
+# The following must be installed separately:
+# - emacs (for code editing and/or scripts)
+# - GNU make (for building scripts)
+# # -------------------------------------------
