@@ -1,0 +1,27 @@
+| Shock | 2005-06|   2009-10|   2010-11|   2011-12|   2013-14|   2015-16|   2018-19|   2019-20  |
+|-
+| Conflict/Violence  | 268 | 34 | 27 | 46 | 11 | 12 | 22 | 25 |
+| Death of Income Earner(s)  | 99 | 27 | 17 | 19 | 30 | 19 | 20 | 19 |
+| Death of Other Household Member(s)  | 423 | 74 | 58 | 35 | 66 | 35 | 44 | 49 |
+| Drought  | 1234 | <NA> | <NA> | <NA> | 735 | 526 | 556 | 360 |
+| Drought/Irregular Rains  | <NA> | 1344 | 710 | 560 | <NA> | <NA> | <NA> | <NA> |
+| Erosion  | <NA> | <NA> | <NA> | <NA> | 15 | 3 | 19 | 13 |
+| Fire  | 105 | 26 | 21 | 20 | 17 | 18 | 12 | 9 |
+| Floods  | 426 | 61 | 102 | 148 | 98 | 62 | 74 | 117 |
+| Irregular Rains  | <NA> | <NA> | <NA> | <NA> | 179 | 72 | 180 | 169 |
+| Landslides  | <NA> | <NA> | <NA> | <NA> | 1 | <NA> | 2 | 2 |
+| Landslides/Erosion  | <NA> | 21 | 5 | 17 | <NA> | <NA> | <NA> | <NA> |
+| Loss of Employment of Previously Employed Household Member(s) (Not Due to Illness or Accident)  | <NA> | 9 | 10 | 8 | 5 | 10 | 5 | 6 |
+| Other (Specify)  | 111 | 101 | 60 | 57 | 62 | 45 | 50 | 75 |
+| Reduction in the Earnings of Currently (Off-Farm) Employed Household Member(s)  | <NA> | 28 | 3 | 10 | 6 | 4 | 15 | 15 |
+| Serious Illness or Accident of Income Earner(s)  | 82 | 189 | 152 | 91 | 86 | 56 | 107 | 119 |
+| Serious Illness or Accident of Other Household Member(s)  | <NA> | 188 | 149 | 65 | 47 | 32 | 83 | 78 |
+| Theft  | 349 | <NA> | <NA> | <NA> | <NA> | <NA> | <NA> | <NA> |
+| Theft of Agricultural Assets/Output (Crop or Livestock)  | <NA> | 127 | 48 | 21 | 35 | 27 | 41 | 40 |
+| Theft of Money/Valuables/Non-Agricultural Assets  | <NA> | 106 | 48 | 34 | 41 | 35 | 34 | 43 |
+| Unusually High Costs of Agricultural Inputs  | 71 | 60 | 19 | 27 | 49 | 7 | 10 | 12 |
+| Unusually High Level of Crop Pests & Disease  | <NA> | 137 | 40 | 61 | 54 | 35 | <NA> | <NA> |
+| Unusually High Level of Crop Pests &amp; Disease  | 292 | <NA> | <NA> | <NA> | <NA> | <NA> | 120 | 79 |
+| Unusually High Level of Livestock Disease  | 183 | 82 | 37 | 31 | 17 | 18 | 10 | 5 |
+| Unusually Low Prices for Agricultural Output  | <NA> | 53 | 35 | 38 | 18 | 5 | 68 | 17 |
+
